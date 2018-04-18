@@ -1,0 +1,14 @@
+{
+  "name": "github_webhook",
+  "version": "1.0.0",
+  "description": "github_webhook",
+  "main": "main.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "liyuqihxc",
+  "license": "MIT",
+  "dependencies": {
+    "github-webhook-handler": "^0.7.1"
+  }
+}
