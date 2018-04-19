@@ -82,13 +82,15 @@ do
   shift
 done
 
+type git >/dev/null 2>&1 || { echo >&2 "找不到git的可执行文件，无法检出项目。"; exit 1; }
+
 if [ -z "$BRANCH_NAME" ]; then
   echo "set \"master\" for default branch."
   BRANCH_NAME="master"
 fi
 
 if [ -z "$URL" -o -z "$TARGET_DIR" -o -z "$SUB_SCRIPT" ]; then
-  echo "必须提供所有必须参数。"
+  echo >&2 "必须提供所有必须参数。"
   exit 1
 fi
 
