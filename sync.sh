@@ -101,7 +101,7 @@ else
 fi
 
 echo "Start deployment...."
-source $SUB_SCRIPT
+source $SUB_SCRIPT $TARGET_DIR
 echo "Finished."
 
 exit 1
