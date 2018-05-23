@@ -13,4 +13,10 @@ type dotnet >/dev/null 2>&1 || { echo >&2 "找不到dotnet的可执行文件，�
 
 dotnet build -c Release "$1/$BACKEND_DIR/myblog.csproj"
 
-nohup dotnet "$1/$BACKEND_DIR/bin/Release/netcoreapp2.0/myblog.dll" > $BACKEND_DIR.log &
+nohup dotnet "$1/$BACKEND_DIR/bin/Release/netcoreapp2.0/myblog.dll" > "$BACKEND_DIR.log" &
+
+. $1/$FRONT_DIR
+
+npm run build
+
+npm run start
