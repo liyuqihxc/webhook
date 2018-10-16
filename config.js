@@ -13,8 +13,15 @@ var projects = [
         name: 'liyuqihxc.top',
         path: '/www/liyuqihxc.top',
         url: 'https://github.com/liyuqihxc/liyuqihxc.top.git',//不用ssh可以省去设置ssh key的麻烦
-        exec: './blog_deploy.sh',
+        exec: './shell/blog/blog_deploy.sh',
         branch: 'develop'// default: master
+    },
+    {
+        name: 'PSMS',
+        path: 'D:\\PSMS',
+        url: 'http://192.168.0.250:9090/liyuqi/PSMS.git',
+        exec: './shell/psms/psms_deploy.cmd',
+        branch: 'master'
     }
 ]
 
