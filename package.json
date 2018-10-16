@@ -9,6 +9,7 @@
   "author": "liyuqihxc",
   "license": "MIT",
   "dependencies": {
-    "github-webhook-handler": "^0.7.1"
+    "github-webhook-handler": "^0.7.1",
+    "gitlab-webhook-handler": "^1.0.1"
   }
 }

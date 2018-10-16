@@ -5,7 +5,7 @@ var port = 9091;
 var app_secret = 'REPLACE WITH YOUR OWN'
 
 // github-webhook-handler监听路径
-var app_path = 'REPLACE WITH YOUR OWN'
+var app_path = '/autodeploy'
 
 // 项目配置
 var projects = [
@@ -20,8 +20,8 @@ var projects = [
         name: 'PSMS',
         path: 'D:\\PSMS',
         url: 'http://192.168.0.250:9090/liyuqi/PSMS.git',
-        exec: './shell/psms/psms_deploy.cmd',
-        branch: 'master'
+        exec: 'run-deploy.cmd',
+        branch: 'develop'
     }
 ]
 
