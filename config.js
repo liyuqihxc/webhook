@@ -7,6 +7,10 @@ var app_secret = 'REPLACE WITH YOUR OWN'
 // github-webhook-handler监听路径
 var app_path = '/autodeploy'
 
+var self_update = {
+    name: 'webhook'
+}
+
 // 项目配置
 var projects = [
     {
@@ -22,5 +26,6 @@ module.exports = {
     projects,
     port,
     app_secret,
-    app_path
+    app_path,
+    self_update
 };

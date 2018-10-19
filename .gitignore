@@ -11,6 +11,7 @@ bin/
 obj/
 *.sqlite
 Migrations/
+logs/*.Deploy.log
 
 # Editor directories and files
 .idea

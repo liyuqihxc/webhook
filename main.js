@@ -19,39 +19,55 @@ handler.on('error', function (err) {
 });
 
 handler.on('tag_push', function (event) {
-  console.log('Received a push event for %s to %s',
-    event.payload.repository.name,
+  console.log('Received a push event for \"%s\" to \"%s\"',
+    event.payload.repository.url,
     event.payload.ref);
   
   var project = config.projects.find(m => m.name === event.payload.repository.name);
-  if (!project)
+  if (!project && event.payload.repository.name != config.self_update.name)
     return;
+
+  var cmd = undefined;
+  if (project) {
+    cmd = getCmdLine(project.name, project.url, project.branch, event.payload.ref, path.resolve(project.path), project.exec);
+  } else {
+    var cmdRestart = '';
+    if (process.platform === 'win32') {
+      cmdRestart = 'taskkill /f /pid ' + process.pid + ' && node main.js';
+    } else {
+      throw new Error('Not Implemented.')
+    }
+    cmd = getCmdLine(event.payload.repository.name, event.payload.repository.url, 'master', event.payload.ref, path.resolve('./'), cmdRestart)
+  }
   
+  child_process.spawn(cmd, {cwd: path.resolve('./'), detached: true}, (err, stdout, stderr) => {
+    if (err) {
+      console.error(err);
+      throw err;
+    }
+  }).unref();
+});
+
+function getCmdLine (name, url, branch, ref, outdir, script) {
   var cmd = '';
   if (process.platform === 'win32'){
     cmd = cmd.concat(
       'cmd.exe /c call ',
       '\"' + path.resolve('./sync.cmd') + '\"',
       ' -b ',
-      project.branch,
+      branch,
       ' -u ',
-      project.url,
+      url,
       ' -t ',
-      event.payload.ref,
+      ref,
       ' -o ',
-      '\"' + path.resolve(project.path) + '\"',
+      '\"' + outdir + '\"',
       ' -s ',
-      project.exec,
-      ' > deploy.txt'
+      script,
+      ' > logs/' + name + 'deploy.log'
     );
   } else {
     throw new Error("Not Implemented.");
   }
-
-  child_process.exec(cmd, {cwd: path.resolve('./'), encoding: 'utf8'}, (err, stdout, stderr) => {
-    if (err) {
-      console.error(err);
-      throw err;
-    }
-  });
-});
+  return cmd;
+}

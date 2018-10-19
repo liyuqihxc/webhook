@@ -8,7 +8,7 @@ SET Branch=master
 
 :loop
 IF NOT "%1"=="" (
-    IF /I "%1"=="-help" (
+    IF /I "%1"=="-h" (
         GOTO :help
     )
 
@@ -53,19 +53,39 @@ PUSHD %TargetDir%
 
 IF NOT EXIST .\.git\ (
     git clone %Repository% -b %Branch% %TargetDir%
+    IF NOT %ERRORLEVEL%==0 (
+         ECHO Failed to clone repository: %Repository%
+         GOTO :end
+    )
 )
 
-git fetch --all --tags --prune
-git checkout %Tag%
+git fetch --all --tags --prune && git checkout %Tag%
+
+IF NOT %ERRORLEVEL%==0(
+    ECHO Failed to checkout Tag: %Tag%
+    GOTO :end
+)
 
 CALL %DeployScript%
+
+IF NOT %ERRORLEVEL%==0(
+    ECHO Deploy script failing with exit code %ERRORLEVEL%.
+    GOTO :end
+)
+ELSE
+(
+    ECHO 部署时间 %DATE% %TIME% >> .version
+    git rev-parse HEAD >> .version
+    ECHO. >> .version
+)
+
 POPD
 
 :end
 EXIT /b 0
 
 :help
-ECHO Usage: .\psms_deploy.cmd [-u ^<Repository^>] [-b ^<Branch^>] [-t ^<Tag^>] [-o ^<TargetDir^>] [-s ^<DeployScript^>] [-h]
+ECHO Usage: .\sync.cmd [-u ^<Repository^>] [-b ^<Branch^>] [-t ^<Tag^>] [-o ^<TargetDir^>] [-s ^<DeployScript^>] [-h]
 ECHO.
 ECHO Options:
 ECHO   -u ^<Repository^>     Git仓库
