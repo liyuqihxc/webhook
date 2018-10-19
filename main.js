@@ -40,12 +40,8 @@ handler.on('tag_push', function (event) {
     cmd = getCmdLine(event.payload.repository.name, event.payload.repository.url, 'master', event.payload.ref, path.resolve('./'), cmdRestart)
   }
   
-  child_process.spawn(cmd, {cwd: path.resolve('./'), detached: true}, (err, stdout, stderr) => {
-    if (err) {
-      console.error(err);
-      throw err;
-    }
-  }).unref();
+  child_process.spawn(cmd, [], {cwd: path.resolve('./'), detached: true})
+    .unref();
 });
 
 function getCmdLine (name, url, branch, ref, outdir, script) {
