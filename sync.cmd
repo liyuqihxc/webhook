@@ -1,5 +1,7 @@
 @echo off
 
+chcp 65001
+
 IF "%1"=="" (
     GOTO :help
 )
@@ -61,19 +63,17 @@ IF NOT EXIST .\.git\ (
 
 git fetch --all --tags --prune && git checkout %Tag%
 
-IF NOT %ERRORLEVEL%==0(
+IF NOT %ERRORLEVEL%==0 (
     ECHO Failed to checkout Tag: %Tag%
     GOTO :end
 )
 
 CALL %DeployScript%
 
-IF NOT %ERRORLEVEL%==0(
+IF NOT %ERRORLEVEL%==0 (
     ECHO Deploy script failing with exit code %ERRORLEVEL%.
     GOTO :end
-)
-ELSE
-(
+) ELSE (
     ECHO 部署时间 %DATE% %TIME% >> .version
     git rev-parse HEAD >> .version
     ECHO. >> .version

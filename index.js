@@ -40,30 +40,32 @@ handler.on('tag_push', function (event) {
     cmd = getCmdLine(event.payload.repository.name, event.payload.repository.url, 'master', event.payload.ref, path.resolve('./'), cmdRestart)
   }
   
-  child_process.spawn(cmd, [], {cwd: path.resolve('./'), detached: true})
+  child_process.spawn(cmd[0], cmd[1], {cwd: path.resolve('./'), detached: true, windowsHide: false, shell: true})
     .unref();
 });
 
 function getCmdLine (name, url, branch, ref, outdir, script) {
-  var cmd = '';
+  var cmd = [];
+  var args = [];
   if (process.platform === 'win32'){
-    cmd = cmd.concat(
-      'cmd.exe /c call ',
-      '\"' + path.resolve('./sync.cmd') + '\"',
-      ' -b ',
-      branch,
-      ' -u ',
-      url,
-      ' -t ',
-      ref,
-      ' -o ',
-      '\"' + outdir + '\"',
-      ' -s ',
-      script,
-      ' > logs/' + name + 'deploy.log'
-    );
+    // cmd /c sync.cmd -u url -b branch -t ref -o outdir -s script > logs/name.deploy.log
+    cmd.push('cmd.exe');
+    args.push('/c');
+    args.push('"' + path.resolve('./sync.cmd') + '"');
+    args.push('-u');
+    args.push(url);
+    args.push('-b');
+    args.push(branch);
+    args.push('-t');
+    args.push(ref);
+    args.push('-o');
+    args.push(outdir);
+    args.push('-s');
+    args.push(script);
+    args.push('^>logs/' + name + '.deploy.log')
   } else {
     throw new Error("Not Implemented.");
   }
+  cmd.push(args);
   return cmd;
 }
